@@ -15,7 +15,14 @@
 
       .logo-container img {
           max-height: 60px; /* Adjust height as needed */
-      }
+      }    
+
+        #loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+
   </style>
 </head>
 <body>
@@ -36,7 +43,12 @@
             </select>
         </div>
 
-        <div id="tables-container" class="table-responsive"></div>
+    <div id="tables-container" class="table-responsive">
+        <div id="loading-spinner" class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+
+    </div>
     </div>
 
     <!-- Include Bootstrap JS and dependencies -->
