@@ -7,48 +7,54 @@
     <!-- Include Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-      /* Custom CSS for additional styling */
-      .logo-container {
-          text-align: center;
-          padding: 20px 0;
-      }
+        /* Custom CSS for additional styling */
+        .logo-container {
+            text-align: center;
+            padding: 20px 0;
+        }
 
-      .logo-container img {
-          max-height: 60px; /* Adjust height as needed */
-      }    
+        .logo-container img {
+            max-height: 60px; /* Adjust height as needed */
+        }
 
         #loading-spinner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-    }
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
 
-  </style>
+        .card-body .row > div {
+            margin-bottom: 10px;
+        }
+
+        .custom-card-header {
+            background-color: rgba(9, 174, 134, 1);
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Logo -->
         <div class="row">
-          <div class="col-12 logo-container">
-              <img src="https://www.utkorsho.tech/_next/static/media/UtkorshoLogo.11e531db.svg" alt="Logo" class="img-fluid">
-              <h1 class="my-4" style="color: rgba(9,174,134,255); font-size:2rem;">Utkorsho Routine</h1>
-          </div>
-      </div>
+            <div class="col-12 logo-container">
+                <img src="https://www.utkorsho.tech/_next/static/media/UtkorshoLogo.11e531db.svg" alt="Logo" class="img-fluid">
+                <h1 class="my-4" style="color: rgba(9,174,134,255); font-size:2rem;">Utkorsho Routine</h1>
+            </div>
+        </div>
 
         <!-- Dropdown for table selection -->
         <div class="form-group">
-            <!-- <label for="tableSelect">Select Table:</label> -->
             <select class="form-control" id="tableSelect" onchange="showSelectedTable()">
                 <!-- Table names will be dynamically populated here -->
             </select>
         </div>
 
-    <div id="tables-container" class="table-responsive">
-        <div id="loading-spinner" class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
+        <div id="tables-container">
+            <div id="loading-spinner" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
         </div>
-
-    </div>
     </div>
 
     <!-- Include Bootstrap JS and dependencies -->
@@ -101,27 +107,53 @@
 
                 // Function to show the selected table
                 function showTable(index) {
-
                     // Clear previous table if any
                     container.innerHTML = '';
 
                     // Clone the selected table and append it to the container
                     const clonedTable = tables[index].cloneNode(true);
                     const rows = clonedTable.querySelectorAll('tr');
-                    
 
-                    rows.forEach(row => {
-                        const cells = row.querySelectorAll('td, th');
+                    //give title to each data
+                    const tableTitles =[];
+
+                    rows.forEach((row, rowIndex) => {
+                        const cells = Array.from(row.querySelectorAll('td, th'));
 
                         // Remove the first cell in each row
                         if (cells.length > 0) {
-                            cells[0].remove();
+                            cells.shift();
                         }
 
-                        //table header bg color
-                        let shouldHighlightRow = false;
+                        // Check if the row should be omitted based on the new criteria
+                        const firstCellText = cells[0]?.textContent.trim();
+                        const isFirstCellNumber = !isNaN(firstCellText);
+                        const areOtherCellsEmpty = cells.slice(1).every(cell => cell.textContent.trim() === '');
 
-                        cells.forEach(cell => {
+                        if (isFirstCellNumber && areOtherCellsEmpty) {
+                            return; // Skip this row
+                        }
+
+                        // Create a card for each row
+                        const card = document.createElement('div');
+                        card.className = 'card mb-3';
+
+                        const cardBody = document.createElement('div');
+                        cardBody.className = 'card-body';
+
+                        const rowDiv = document.createElement('div');
+                        rowDiv.className = 'row';
+
+                        //table header bg color
+
+                        let shouldHighlightRow = false;
+                        
+                        let tableTileIndex = false;
+
+                        let headerIndex = false;
+
+                        cells.forEach((cell, cellIndex) => {
+
                             // Check if the cell contains specific text
                             if (cell.textContent.includes('Date') ||
                                 cell.textContent.includes('উৎকর্ষ নোটিশ বোর্ড')||
@@ -129,45 +161,100 @@
                                 cell.textContent.includes('আজকের')||
                                 cell.textContent.includes('পরশুদিনের')||
                                 cell.textContent.includes('কোর্সের নাম') ||
-                                cell.textContent.includes('Class Routine') ||
-                                cell.textContent.includes('Exam Routine') ||
-                                cell.textContent.includes(tableNames[index])) { // Assuming tableNames is an array of table names
+                                cell.textContent.includes('Subject') ||
+                                cell.textContent.includes('Routine')||                                
+                                cell.textContent.includes('সকল কোর্সের সিলেবাস')||
+                                cell.textContent.includes('উৎকর্ষের ফ্রি ক্লাস ও ক্লাস নোটস') ||
+                                cell.textContent.includes('উৎকর্ষ') ||
+                                (rowIndex === 0 && cellIndex === 0)) { // Assuming tableNames is an array of table names
                                 shouldHighlightRow = true;
+                                // Append cell content to cell div
                             }
+
+
+                            //check if contains the table tites
+                            if ((cell.textContent.includes('Program Name')||
+                                cell.textContent.includes('তারিখ') ||
+                                cell.textContent.includes('Class No.') ||
+                                cell.textContent.includes('Exam Date') ||
+                                cell.textContent.includes('Batch') ||
+                                cell.textContent.includes('কোর্সের নাম') )
+                                &&!cell.textContent.includes('২। পরীক্ষার তারিখ নিচের রুটিনে দেয়া আছে। MQC পরীক্ষার দেয়া যাবে উল্লিখিত তারিখে সকাল ০৮:০০ টা হতে শুরু করে কোর্সের শেষ পর্যন্ত। CQ পরীক্ষা দেয়া যাবে পরবর্তী ৭ দিন পর্যন্ত।')){
+                                    tableTileIndex = true;
+                                    headerIndex = rowIndex;
+                                    // console.log(rowIndex, cellIndex);
+                                }
+                                
+                            if(tableTileIndex){
+                                tableTitles.push(cell.textContent);
+                            }
+
+                            // Create a div for each cell
+                            const cellDiv = document.createElement('div');
+                            cellDiv.className = 'col-md-4 col-sm-6'; // Make it responsive
+                            
+                            if(shouldHighlightRow){
+                                    // Append cell content to cell div
+                                cellDiv.innerHTML = cell.innerHTML;
+                                rowDiv.appendChild(cellDiv);
+                                return;
+                            }
+
+                            if((headerIndex<rowIndex+1)&&
+                                !cell.textContent.includes('উৎকর্ষ নোটিশ বোর্ড')&&
+                                !cell.textContent.includes('আগামীকালের')&&
+                                !cell.textContent.includes('আজকের')&&
+                                !cell.textContent.includes('পরশুদিনের'                                    
+                                )){
+                                    
+                                // Process "class done" and "exam done" cells
+                                if (cell.innerHTML.includes('<use href="#checked-checkbox-id" fill="#000000"></use>') || cell.innerHTML.includes('TRUE')) {
+                                    cell.innerHTML = "<b style:'color: teal;'>"+tableTitles[cellIndex]+' : </b>'+'<span>&#10004;</span>'; // Display tick mark
+                                } else if (cell.innerHTML.includes('<use href="#unchecked-checkbox-id" fill="#000000"></use>')) {
+                                    cell.innerHTML ="<b style:'color:teal;'>"+tableTitles[cellIndex]+' : </b>'+ 'Pending'; // Display "Pending"
+                                    // console.log(cell.textContent);
+                                }
+                                else{
+                                    cell.innerHTML = "<b style:'color:teal;'>"+tableTitles[cellIndex]+' : </b>'+cell.innerHTML;
+                                }
+                    
+                            }
+                            // Append cell content to cell div
+                            cellDiv.innerHTML = cell.innerHTML;
+                            rowDiv.appendChild(cellDiv);
                         });
+
+
+
+                        // console.log(tableTitles);
+
+
+
 
                         // Apply background color and text styles if needed
                         if (shouldHighlightRow) {
-                            row.style.backgroundColor = 'rgba(9, 174, 134, 1)'; // Background color
-                            row.style.color = 'white'; // Text color
-                            row.style.fontWeight = 'bold'; // Bold text
+                            const cardHeader = cardBody;
+                            cardHeader.className = 'card-header custom-card-header';
+                            // cardHeader.textContent = tableNames[index];
+                            card.appendChild(cardHeader);
                         }
-
-                        // Process "class done" and "exam done" cells
-                        cells.forEach(cell => {
-                            if (cell.innerHTML.includes('<use href="#checked-checkbox-id" fill="#000000"></use>')||cell.innerHTML.includes('TRUE')) {
-                                cell.innerHTML = '<span>&#10004;</span>'; // Display tick mark
-                            } else if (cell.innerHTML.includes('<use href="#unchecked-checkbox-id" fill="#000000"></use>')) {
-                                cell.textContent = 'Pending'; // Display "Pending"
-                            }
-                        });
-
 
                         // Check if any cell contains specific texts to omit the row
                         let shouldOmitRow = false;
                         cells.forEach(cell => {
-                            if (cell.textContent.includes('আজকের ক্লাস রুটিন দেখতে ক্লিক করো') ||
+                            if ((cell.textContent.includes('আজকের ক্লাস রুটিন দেখতে ক্লিক করো') ||
                                 cell.textContent.includes('৩। পরীক্ষার নিয়মাবলী পরীক্ষার শুরুতে ওয়েবসাইটে লেখা থাকবে।') ||
                                 cell.textContent.includes('২। পরীক্ষার তারিখ নিচের রুটিনে দেয়া আছে। ') ||
                                 cell.textContent.includes('১। পরীক্ষা হবে') ||
-                                cell.textContent.includes('সকল ক্লাস রুটিন দেখতে ক্লিক করো')) {
+                                cell.textContent.includes('সকল ক্লাস রুটিন দেখতে ক্লিক করো'))||
+                                rowIndex == headerIndex) {
                                 shouldOmitRow = true;
                             }
                         });
 
                         // Remove the row if it should be omitted
                         if (shouldOmitRow) {
-                            row.remove();
+                            return; // Skip this row
                         }
 
                         // Check if all remaining cells are empty
@@ -180,14 +267,13 @@
 
                         // Remove the row if all cells are empty
                         if (isEmptyRow) {
-                            row.remove();
+                            return; // Skip this row
                         }
+
+                        cardBody.appendChild(rowDiv);
+                        card.appendChild(cardBody);
+                        container.appendChild(card);
                     });
-
-                    // Add Bootstrap table classes
-                    clonedTable.classList.add('table', 'table-bordered', 'table-striped', 'table-hover' );
-
-                    container.appendChild(clonedTable);
                 }
             } catch (error) {
                 console.error('Error fetching or parsing tables:', error);
