@@ -178,21 +178,22 @@
 
                             //check if contains the table tites
                             if ((cell.textContent.includes('Program Name')||
-                                cell.textContent.includes('তারিখ') ||
+                                // cell.textContent.includes('তারিখ') ||
                                 cell.textContent.includes('Class No.') ||
                                 cell.textContent.includes('Exam Date') ||
                                 cell.textContent.includes('Batch') ||
-                                cell.textContent.includes('কোর্সের নাম') )
-                                &&!cell.textContent.includes('২। পরীক্ষার তারিখ নিচের রুটিনে দেয়া আছে। MQC পরীক্ষার দেয়া যাবে উল্লিখিত তারিখে সকাল ০৮:০০ টা হতে শুরু করে কোর্সের শেষ পর্যন্ত। CQ পরীক্ষা দেয়া যাবে পরবর্তী ৭ দিন পর্যন্ত।')){
+                                cell.textContent.includes('কোর্সের নাম') )&&
+                                !cell.textContent.includes('২। পরীক্ষার তারিখ নিচের রুটিনে দেয়া আছে। MQC পরীক্ষার দেয়া যাবে উল্লিখিত তারিখে সকাল ০৮:০০ টা হতে শুরু করে কোর্সের শেষ পর্যন্ত। CQ পরীক্ষা দেয়া যাবে পরবর্তী ৭ দিন পর্যন্ত।')){
                                     tableTileIndex = true;
                                     headerIndex = rowIndex;
-                                    if(tableTitles.length>0&&index==0){
-                                        tableTitles.pop();
-                                    }
                                     // console.log(rowIndex, cellIndex);
                                 }
-                                
+                            if(cell.textContent.includes('কোর্সের নাম')&&index==0){
+                                tableTileIndex = false;
+                            }
+
                             if(tableTileIndex){
+                                
                                 tableTitles.push(cell.textContent);
                             }
 
@@ -213,9 +214,13 @@
                                 !cell.textContent.includes('আগামীকালের')&&
                                 !cell.textContent.includes('আজকের')&&
                                 !cell.textContent.includes('পরশুদিনের')){
+                                
+                                if(index==0 && rowIndex==5){
                                     
+                                }
+
                                 // Process "class done" and "exam done" cells
-                                if (cell.innerHTML.includes('<use href="#checked-checkbox-id" fill="#000000"></use>') || cell.innerHTML.includes('TRUE')) {
+                                else if (cell.innerHTML.includes('<use href="#checked-checkbox-id" fill="#000000"></use>') || cell.innerHTML.includes('TRUE')) {
                                     cell.innerHTML = "<b style:'color: teal;'>"+tableTitles[cellIndex]+' : </b>'+'<span>&#10004;</span>'; // Display tick mark
                                 } 
                                 
@@ -277,6 +282,7 @@
                             cardHeader.className = 'card-header custom-card-header';
                             // cardHeader.textContent = tableNames[index];
                             card.appendChild(cardHeader);
+                            // console.log(rowIndex,card.innerHTML);
                         }
 
                         // Check if any cell contains specific texts to omit the row
@@ -313,6 +319,7 @@
                         cardBody.appendChild(rowDiv);
                         card.appendChild(cardBody);
                         container.appendChild(card);
+                        // console.log(rowIndex,card.innerHTML);
                     });
                 }
             } catch (error) {
