@@ -33,7 +33,7 @@
         }
 
         .card{
-            background-color: rgb(237, 255, 250);
+            background-color: rgb(245, 255, 253);
         }
     </style>
 </head>
@@ -119,8 +119,8 @@
                     const rows = clonedTable.querySelectorAll('tr');
 
                     //give title to each data
-                    
                     const tableTitles =[];
+
                     rows.forEach((row, rowIndex) => {
                         const cells = Array.from(row.querySelectorAll('td, th'));
 
@@ -182,11 +182,8 @@
                                 cell.textContent.includes('Class No.') ||
                                 cell.textContent.includes('Exam Date') ||
                                 cell.textContent.includes('Batch') ||
-                                cell.textContent.includes('কোর্সের নাম'))
-                                &&(!cell.textContent.includes('২। পরীক্ষার তারিখ নিচের রুটিনে দেয়া আছে। MQC পরীক্ষার দেয়া যাবে উল্লিখিত তারিখে সকাল ০৮:০০ টা হতে শুরু করে কোর্সের শেষ পর্যন্ত। CQ পরীক্ষা দেয়া যাবে পরবর্তী ৭ দিন পর্যন্ত।')||
-                                !cell.textContent.includes('কোর্স শুরু তারিখ')||
-                                !cell.textContent.includes('কোর্স শেষের তারিখ')
-                            )){
+                                cell.textContent.includes('কোর্সের নাম') )
+                                &&!cell.textContent.includes('২। পরীক্ষার তারিখ নিচের রুটিনে দেয়া আছে। MQC পরীক্ষার দেয়া যাবে উল্লিখিত তারিখে সকাল ০৮:০০ টা হতে শুরু করে কোর্সের শেষ পর্যন্ত। CQ পরীক্ষা দেয়া যাবে পরবর্তী ৭ দিন পর্যন্ত।')){
                                     tableTileIndex = true;
                                     headerIndex = rowIndex;
                                     if(tableTitles.length>0&&index==0){
@@ -196,13 +193,12 @@
                                 }
                                 
                             if(tableTileIndex){
-            
                                 tableTitles.push(cell.textContent);
                             }
 
                             // Create a div for each cell
                             const cellDiv = document.createElement('div');
-                            cellDiv.className = 'col-md-3 col-sm-4'; // Make it responsive
+                            cellDiv.className = 'col-md-3 col-sm-6'; // Make it responsive
                             
                             if(shouldHighlightRow){
                                     // Append cell content to cell div
@@ -224,40 +220,40 @@
                                 } 
                                 
                                 else if (cell.innerHTML.includes('<use href="#unchecked-checkbox-id" fill="#000000"></use>')) {
-                                    cell.innerHTML ="<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+ 'Pending'; // Display "Pending"
+                                    cell.innerHTML ="<b style:'color:teal;'>"+tableTitles[cellIndex]+' : </b>'+ 'Pending'; // Display "Pending"
                                     // console.log(cell.textContent);
                                 }
                                 else if(tableTitles[cellIndex]=='Subject'||tableTitles[cellIndex]=='Date'||tableTitles[cellIndex]=='Exam Date'){
 
-                                    switch(cell.innerHTML){
-                                        case 'Physics':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-primary">'+cell.innerHTML+'</span>';
-                                            break;
-                                        case 'Chemistry':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-danger">'+cell.innerHTML+'</span>';
-                                            break;
-                                        case 'Higher Math':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-warning">'+cell.innerHTML+'</span>';
-                                            break;
-                                        case 'Biology':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-success">'+cell.innerHTML+'</span>';
-                                            break;
-                                        case 'English':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-info">'+cell.innerHTML+'</span>';
-                                            break;
-                                        case 'Bangla':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-secondary">'+cell.innerHTML+'</span>';
-                                            break;
-                                        case 'ICT':
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-dark">'+cell.innerHTML+'</span>';
-                                            break;
-                                        default:
-                                            cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="btn btn-warning">'+cell.innerHTML+'</span>';
-                                    }
-                                    
-                                }
+                                        switch(cell.innerHTML){
+                                            case 'Physics':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-primary">'+cell.innerHTML+'</span>';
+                                                break;
+                                            case 'Chemistry':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-danger">'+cell.innerHTML+'</span>';
+                                                break;
+                                            case 'Higher Math':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-warning">'+cell.innerHTML+'</span>';
+                                                break;
+                                            case 'Biology':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-success">'+cell.innerHTML+'</span>';
+                                                break;
+                                            case 'English':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-info">'+cell.innerHTML+'</span>';
+                                                break;
+                                            case 'Bangla':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-secondary">'+cell.innerHTML+'</span>';
+                                                break;
+                                            case 'ICT':
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="badge badge-dark">'+cell.innerHTML+'</span>';
+                                                break;
+                                            default:
+                                                cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+'<span class="btn btn-warning">'+cell.innerHTML+'</span>';
+                                        }
+
+                                        }
                                 else{
-                                    cell.innerHTML = "<b class='font-weight-bold'>"+tableTitles[cellIndex]+' : </b>'+cell.innerHTML;
+                                    cell.innerHTML = "<b style:'color:teal;'>"+tableTitles[cellIndex]+' : </b>'+cell.innerHTML;
                                 }
 
                                 
